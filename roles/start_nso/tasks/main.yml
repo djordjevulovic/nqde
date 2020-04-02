@@ -1,0 +1,5 @@
+- name: Starting NSO"
+  shell: "source {{ nso_install_dir }}/ncsrc && ncs"
+  args:
+    chdir: "{{ project_run_dir }}"
+    executable: /bin/bash

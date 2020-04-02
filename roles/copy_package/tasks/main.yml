@@ -1,0 +1,17 @@
+- name: chmod package directory
+  file:
+    path: "{{ project_dir }}/packages/{{ package_name }}"
+    mode: a+rw
+- name: Remove run-time packages Directory
+  file:
+    path: "{{ project_run_dir }}/packages/{{ package_name }}"
+    state: absent
+- name: Create run-time packages Directory
+  file:
+    path: "{{ project_run_dir }}/packages/{{ package_name }}"
+    state: directory
+- name: Copy dev package directory to run-time packages Directory
+  copy:
+    src: "{{ project_dir }}/packages/{{ package_name }}"
+    dest: "{{ project_run_dir }}/packages/{{ package_name }}"
+

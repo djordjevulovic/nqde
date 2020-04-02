@@ -1,0 +1,5 @@
+- name: Stopping NSO"
+  shell: "source {{ nso_install_dir }}/ncsrc && ncs --stop"
+  args:
+    chdir: "{{ project_run_dir }}"
+    executable: /bin/bash

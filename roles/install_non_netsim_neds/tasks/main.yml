@@ -1,0 +1,69 @@
+- set_fact:
+     netsim_device_ned_list: "{{ devices | selectattr('type', 'equalto', 'netsim') | map(attribute='ned') | list | unique }}"
+
+#  - debug: var=netsim_device_ned_list
+
+- set_fact:
+     other_device_ned_list: "{{ devices | selectattr('type', 'ne', 'netsim') | map(attribute='ned') | list | unique }}"
+
+
+#  - debug: var=other_device_ned_list
+
+- set_fact:
+     diff_ned_list: "{{ other_device_ned_list | difference(netsim_device_ned_list) }}"
+
+#  - debug: var=diff_list
+
+- set_fact:
+     diff_neds: "{{ ned_list | selectattr('name', 'in', diff_ned_list) | list }}"
+
+- debug: var=diff_neds
+
+- name: Find archive files for all NEDs
+  find:
+      paths: "{{ playbook_dir }}/nso-neds/"
+      patterns: "ncs*.tar.gz"
+  register: find_result
+
+#  - debug: var=find_result.files
+
+- set_fact:
+     ned_archive_list: "{{ find_result.files | map(attribute='path') | list }}"
+
+# - debug: var=ned_archive_list
+
+- set_fact:
+      ned_format: ".*%s-%s\\.tar\\.gz"
+
+- name: Find NED archive names
+#    debug:
+#      msg:
+#        - '{{  ned_archive_list | map("regex_search",ned_format|format(item.name,item.version)) | select("string") | list | first }}'
+  unarchive:
+      src: '{{  ned_archive_list | map("regex_search",ned_format|format(item.name,item.version)) | select("string") | list | first }}'
+      dest: "{{ project_run_dir }}/packages/"
+  loop:
+      "{{ diff_neds }}"
+
+#- name: "Unpack NEDs"
+#  unarchive:
+#    src: "{{ playbook_dir }}/nso-neds/{{ item.name }}-{{ item.type }}-{{ item.version }}.tar.gz"
+#    dest: "{{ project_dir }}/run/packages/" 
+#  loop:
+#    "{{ diff_neds }}"
+
+#- name: "Copy NEDs"
+#  copy:
+#    src: "{{ playbook_dir }}/nso-neds/{{ item.name}}-{{ item.type }}-{{ item.version }}"
+#    dest: "{{ project_dir }}/run/packages/"
+#  loop:
+#    "{{ diff_neds }}"
+   
+
+#- name: "Create symbolic links to NEDs"
+#  file:
+#    src: "{{ playbook_dir }}/nso-neds/{{ item.name}}-{{ item.type }}-{{ item.version }}"
+#    dest: "{{ project_dir }}/run/packages/"
+#    state: link
+#  loop:
+#    "{{ diff_neds }}"

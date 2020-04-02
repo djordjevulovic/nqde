@@ -1,0 +1,5 @@
+- name: Starting Netsim"
+  shell: "source {{ nso_install_dir }}/ncsrc && ncs-netsim start"
+  args:
+    chdir: "{{ project_run_dir }}"
+    executable: /bin/bash

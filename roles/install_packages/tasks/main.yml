@@ -1,0 +1,15 @@
+- name: Create packages
+  include_role: 
+      name: create_package
+  vars:
+      package_name: "{{ item.name }}"
+  loop:
+      "{{ packages }}"
+
+#    - role: copy_package
+#      vars:
+#         package_name: "{{ default_package }}"
+#    - role: make_package
+#      vars:
+#         package_name: "{{ default_package }}"
+

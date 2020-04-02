@@ -1,0 +1,30 @@
+- set_fact:
+    ned_obj_list: "{{ ( ned_list | selectattr('name', 'equalto', netsim_ned) | list) }}"
+
+- set_fact:
+    ned_obj: "{{ ned_obj_list[0] }}"
+  when:
+    ned_obj_list | length > 0
+
+- set_fact:
+    ned_dir: "{{ playbook_dir }}/nso-neds/{{ ned_obj.name}}-{{ ned_obj.type }}-{{ ned_obj.version }}"
+  when:
+    ned_obj_list | length > 0
+
+- name: "Check if NED directory {{ ned_dir }} exists"
+  stat:
+      path: "{{ ned_dir }}"
+  register: ned_dir_status
+
+- name: "NED directory does not exist - abort playbook"
+  meta: end_play
+  when:
+    ned_dir_status.stat.exists == False
+
+- name: "Creating NETSIM device {{ netsim_device }} NED {{ netsim_ned }}"
+  shell: "source {{ nso_install_dir }}/ncsrc && ncs-netsim {{ netsim_device_action }} {{ ned_dir }} {{ netsim_device }}"
+  args:
+    chdir: "{{ project_run_dir }}"
+    executable: /bin/bash
+  when: 
+    ned_obj_list | length > 0

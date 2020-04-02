@@ -1,0 +1,25 @@
+
+- name: Find unpacked NSO binaries
+  find:
+    paths: "{{ playbook_dir }}/nso-bin/"
+    patterns: "*linux.x86_64.installer.bin"
+  register: find_result
+
+- debug: var=find_result.files
+
+- name: "Unpack NSO"
+  shell: "sh {{ item.path }}"
+  args:
+    chdir: "{{ playbook_dir }}/nso-bin"
+    executable: /bin/bash
+  loop:
+    "{{ find_result.files }}"
+
+- name: "Remove NSO installation file"
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop:
+    "{{ find_result.files }}"
+
+
