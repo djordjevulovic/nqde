@@ -21,6 +21,20 @@
   loop:
     "{{ find_result.files }}"
 
+# get list of tar.gz archive files
+
+- set_fact:
+    ned_archive_list: "{{ find_result.files | map(attribute='path') | list | map('regex_replace','(.*).signed.bin','\\1.tar.gz') | list }}"
+
+#  - debug: var=ned_archive_list
+
+- name: Unpack NED archive (for netsim)
+  unarchive:
+      src: "{{ item }}"
+      dest: "{{ playbook_dir }}/nso-neds/"
+  loop:
+      "{{ ned_archive_list }}"
+
 # do this also for "{{ playbook_dir }}/nso-neds/{{ ned_base_filename }}.tar.gz.signature"
 
 - name: "Remove NED common installation files"

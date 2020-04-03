@@ -1,16 +1,25 @@
- - name: ackage reload
-   uri:
-      url:  "http://localhost:{{ api_port }}/restconf/operations/packages/reload"
-http://{{ hostvars['dev'].ansible_host }}:{{ ncs_port }}/restconf/data/tailf-ncs:packages/tailf-ncs:reload
+- name: Call action "{{ action_name }}"
+  uri:
+      url:  "http://localhost:{{ api_port }}/restconf/operations/{{ action_name }}"
       user: admin
       password: admin
       method: POST
       force_basic_auth: yes
       return_content: no
       timeout: 200
-    register: _result
+      headers:
+          Content-Type: "application/yang-data+json"
+      body_format: json
+      body:
+        input:
+          "{{ action_args }}"
+  register: action_result
+#   when:
+#     action_args is defined
 
-  curl -X POST \
-    http://localhost:$API_PORT/restconf/operations/packages/reload \
-    -H 'accept: application/yang-data+json' \
-    -H 'authorization: Basic YWRtaW46YWRtaW4='
+#http://{{ hostvars['dev'].ansible_host }}:{{ ncs_port }}/restconf/data/tailf-ncs:packages/tailf-ncs:reload
+
+#  curl -X POST \
+#    http://localhost:$API_PORT/restconf/operations/packages/reload \
+#    -H 'accept: application/yang-data+json' \
+#    -H 'authorization: Basic YWRtaW46YWRtaW4='

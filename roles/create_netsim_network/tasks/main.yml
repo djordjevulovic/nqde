@@ -1,12 +1,8 @@
-- set_fact:
-    netsim_device_list: "{{ ( devices | selectattr('type', 'equalto', 'netsim') | list) }}"
-
 - name: "Create device {{ netsim_device_list[0].name }}"
   include_role:
     name: create_netsim_device
   vars:
-    netsim_device: "{{ netsim_device_list[0].name }}"
-    netsim_ned: "{{ netsim_device_list[0].ned }}"
+    netsim_device: "{{ netsim_device_list[0] }}"
     netsim_device_action: "create-device"
   when:
     netsim_device_list | length > 0
@@ -15,8 +11,7 @@
   include_role:
     name: create_netsim_device
   vars:
-    netsim_device: "{{ netsim_device_list[1].name }}"
-    netsim_ned: "{{ netsim_device_list[1].ned }}"
+    netsim_device: "{{ netsim_device_list[1] }}"
     netsim_device_action: "add-device"
   when:
     netsim_device_list | length == 2
@@ -25,8 +20,7 @@
   include_role:
     name: create_netsim_device
   vars:
-    netsim_device: "{{ item.name }}"
-    netsim_ned: "{{ item.ned }}"
+    netsim_device: "{{ item }}"
     netsim_device_action: "add-device"
   loop:
     "{{ netsim_device_list[1:] | list }}"
