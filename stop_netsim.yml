@@ -5,6 +5,7 @@
 
 
   roles:
-    - role: prepare_environment 
-    - role: stop_nso
+    - role: prepare_environment
+    - role: stop_netsim
+
 

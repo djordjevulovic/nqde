@@ -5,11 +5,11 @@
 
   roles:
     - role: prepare_environment
-#    - role: create_netsim_network
-#    - role: install_run_directory
-#    - role: install_non_netsim_neds
-#    - role: install_packages
-#    - role: start_netsim
-#    - role: start_nso
+    - role: create_project_directories
+    - role: create_netsim_network
+    - role: install_run_directory
+    - role: install_non_netsim_neds
+    - role: install_packages
+    - role: start_netsim
+    - role: start_nso
     - role: load_native_config
-

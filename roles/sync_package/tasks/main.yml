@@ -1,0 +1,14 @@
+- name: Sync local packages
+  synchronize:
+     src: "{{ project_dir }}/dev/packages/{{ package_name }}"
+     dest: "{{ project_run_dir }}/packages/"
+  when:
+     shared == 'false'
+
+- name: Sync shared packages
+  synchronize:
+     src: "{{ playbook_dir }}/shared-packages/{{ package_name }}"
+     dest: "{{ project_run_dir }}/packages/"
+  when:
+     shared == 'true'
+

@@ -1,5 +1,15 @@
-- name: Starting NSO"
+- name: Starting NSO (w/o args)"
   shell: "source {{ nso_install_dir }}/ncsrc && ncs"
   args:
     chdir: "{{ project_run_dir }}"
     executable: /bin/bash
+  when:
+    ncs_args is not defined
+
+- name: Starting NSO (w/ args)"
+  shell: "source {{ nso_install_dir }}/ncsrc && ncs {{ ncs_args }}"
+  args:
+    chdir: "{{ project_run_dir }}"
+    executable: /bin/bash
+  when:
+    ncs_args is defined

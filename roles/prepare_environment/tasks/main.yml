@@ -2,62 +2,13 @@
   set_fact:
        nso_install_dir: "{{ playbook_dir }}/nso-bin/nso-{{ nso_version }}"
 
-- name: "Check if NSO directory {{ nso_install_dir }} exists"
-  stat:
-      path: "{{ nso_install_dir }}"
-  register: nso_dir_status
-
-- name: "NSO directory does not exist - abort playbook"
-  meta: end_play
-  when:
-    nso_dir_status.stat.exists == False
- 
 - name: Set project_dir variable
   set_fact:
        project_dir: "{{ playbook_dir }}/projects/{{ project_name }}"
 
-- name: "Check if project directory {{ project_dir }} exists"
-  stat:
-      path: "{{ project_dir }}"
-  register: project_dir_status
-
-- name: create project directory
-  file:
-       path: "{{ project_dir }}"
-       state: directory
-  when:
-    project_dir_status.stat.exists == False
-
-- name: create project/dev directory
-  file:
-       path: "{{ project_dir }}/dev"
-       state: directory
-
-- name: create project/dev/packages directory
-  file:
-       path: "{{ project_dir }}/dev/packages"
-       state: directory
-
 - name: Set project_run_dir variable
   set_fact:
        project_run_dir: "{{ project_dir }}/run-{{ nso_version }}"
-
-#- name: "Check if run directory {{ project_run_dir }} exists"
-#  stat:
-#      path: "{{ project_run_dir }}"
-#  register: project_run_dir_status
-
-#- name: Remove run Directory
-#  file:
-#    path: "{{ project_dir }}/run"
-#    state: absent
-
-- name: Create run Directory
-  file:
-    path: "{{ project_run_dir }}"
-    state: directory
- # when:
- #   project_run_dir_status.stat.exists == False
 
 - set_fact:
     netsim_device_list: "{{ ( devices | selectattr('type', 'equalto', 'netsim') | list) }}"
@@ -68,7 +19,7 @@
 - set_fact:
      ned_list_netsim: "{{ devices | selectattr('type', 'equalto', 'netsim') | map(attribute='ned') | list | unique }}"
 
-- debug: var=ned_list_netsim
+#- debug: var=ned_list_netsim
 
 - set_fact:
      ned_list_other: "{{ devices | selectattr('type', 'ne', 'netsim') | map(attribute='ned') | list | unique }}"
@@ -76,5 +27,5 @@
 - set_fact:
      ned_list_only_other: "{{ ned_list_other | difference(ned_list_netsim) }}"
 
-- debug: var=ned_list_only_other
+#- debug: var=ned_list_only_other
 

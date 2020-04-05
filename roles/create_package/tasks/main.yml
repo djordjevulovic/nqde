@@ -1,6 +1,6 @@
 - name: "Check if package {{ package_name }} exists"
   stat:
-      path: "{{ project_dir }}/dev/pacakges/{{ package_name }}"
+      path: "{{ project_dir }}/dev/packages/{{ package_name }}"
   register: package_dev_dir_status
 
 - name: Create package
@@ -9,7 +9,7 @@
     chdir: "{{ project_dir }}/dev/packages"
     executable: /bin/bash
   when:
-    package_dev_dir_status.stat.exists == False
+     package_dev_dir_status.stat.exists == False
 
 
 

@@ -7,4 +7,7 @@
   roles:
     - role: prepare_environment 
     - role: stop_nso
+    - role: start_nso
+      vars:
+         ncs_args: "--with-package-reload"
 

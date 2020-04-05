@@ -5,6 +5,8 @@
       package_name: "{{ item.name }}"
   loop:
       "{{ packages }}"
+  when:
+      packages is defined
 
 #    - role: copy_package
 #      vars:

@@ -6,5 +6,6 @@
 
   roles:
     - role: prepare_environment 
-    - role: stop_nso
+    - role: "{{ role_name }}"
+
 

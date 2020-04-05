@@ -6,7 +6,7 @@
       method: POST
       force_basic_auth: yes
       return_content: no
-      timeout: 200
+      timeout: 3600
       headers:
           Content-Type: "application/yang-data+json"
       body_format: json
