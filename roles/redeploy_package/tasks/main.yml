@@ -1,0 +1,20 @@
+- name: "Check if python code was changed for {{ package_name }}"
+  shell: "diff -r {{ project_dir }}/dev/packages/{{ package_name }}/python {{ project_run_dir }}/packages/{{ package_name }}/python"
+  args:
+      chdir: "{{ playbook_dir }}"
+      executable: /bin/bash
+  register:
+      diff_python
+  ignore_errors: yes
+  no_log: True
+
+- debug: var=diff_python.failed
+
+- name: "Redeploy package {{ package_name }}"
+  include_role:
+     name: call_action
+  vars:
+     action_name: "packages/package={{ package_name }}/redeploy"
+     action_args: ""
+  when:
+     diff_python.failed == 'True'

@@ -1,4 +1,4 @@
-- name: make package
+- name: "Compile package {{ package_name }}"
   shell: "source {{ nso_install_dir }}/ncsrc && make"
   args:
     chdir: "{{ project_run_dir }}/packages/{{ package_name }}/src"

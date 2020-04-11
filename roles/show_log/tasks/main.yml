@@ -1,4 +1,9 @@
 - name: Show NSO logs
-  shell: "tail -{{ n_lines }} "{{ project_run_dir }}/logs/ncs-python-vm-{{ package_name }}.log"
+  shell: "tail -{{ n_lines }} {{ project_run_dir }}/logs/ncs-python-vm-{{ package_name }}.log"
   args:
     executable: /bin/bash
+  register:
+    tail_output
+
+- debug: var=tail_output.stdout_lines
+
