@@ -4,23 +4,21 @@
       patterns: "ncs*.tar.gz"
   register: find_result
 
-#  - debug: var=find_result.files
+#- debug: var=find_result.files
 
 - set_fact:
      ned_archive_list: "{{ find_result.files | map(attribute='path') | list }}"
 
-# - debug: var=ned_archive_list
+#- debug: var=ned_archive_list
 
 - set_fact:
       ned_format: ".*%s\\.tar\\.gz"
 
+#- debug: var=ned_list_only_other
+
 - name: Find NED archive names
-#    debug:
-#      msg:
-#        - '{{  ned_archive_list | map("regex_search",ned_format|format(item)) | select("string") | list | first }}'
   unarchive:
       src: '{{  ned_archive_list | map("regex_search",ned_format|format(item)) | select("string") | list | first }}'
       dest: "{{ project_run_dir }}/packages/"
   loop:
       "{{ ned_list_only_other }}"
-

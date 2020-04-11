@@ -3,3 +3,6 @@
   args:
     chdir: "{{ project_run_dir }}"
     executable: /bin/bash
+  when:
+    netsim_device_list | length > 0
+

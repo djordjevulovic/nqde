@@ -10,21 +10,28 @@
   set_fact:
        project_run_dir: "{{ project_dir }}/run-{{ nso_version }}"
 
-- set_fact:
+- name: Set netsim_device_list variable
+  set_fact:
     netsim_device_list: "{{ ( devices | selectattr('type', 'equalto', 'netsim') | list) }}"
  
-- set_fact:
+- name: Set ned_list_all variable
+  set_fact:
      ned_list_all: "{{ devices | map(attribute='ned') | list | unique }}"
 
-- set_fact:
+- name: Set ned_list_netsim variable
+  set_fact:
      ned_list_netsim: "{{ devices | selectattr('type', 'equalto', 'netsim') | map(attribute='ned') | list | unique }}"
 
 #- debug: var=ned_list_netsim
 
-- set_fact:
+- name: Set ned_list_other variable
+  set_fact:
      ned_list_other: "{{ devices | selectattr('type', 'ne', 'netsim') | map(attribute='ned') | list | unique }}"
 
-- set_fact:
+#- debug: var=ned_list_other
+
+- name: Set ned_list_only_other variable
+  set_fact:
      ned_list_only_other: "{{ ned_list_other | difference(ned_list_netsim) }}"
 
 #- debug: var=ned_list_only_other
