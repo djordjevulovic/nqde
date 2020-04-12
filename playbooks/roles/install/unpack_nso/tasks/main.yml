@@ -1,7 +1,7 @@
 
 - name: Find unpacked NSO installation file
   find:
-    paths: "{{ playbook_dir }}/nso-bin/"
+    paths: "{{ nqde_dir }}/nso-bin/"
     patterns: "*linux.x86_64.installer.bin"
   register: find_result
 
@@ -15,7 +15,7 @@
 - name: "Unpack NSO installation {{ item }}"
   shell: "sh {{ item }}.linux.x86_64.installer.bin {{ item }} --local-install"
   args:
-    chdir: "{{ playbook_dir }}/nso-bin"
+    chdir: "{{ nqde_dir }}/nso-bin"
     executable: /bin/bash
   loop:
     "{{ nso_install_list }}"

@@ -1,6 +1,6 @@
 - name: Find unpacked neds
   find:
-    paths: "{{ playbook_dir }}/nso-neds/"
+    paths: "{{ neds_dir }}"
     patterns: "*.signed.bin"
   register: find_result
 
@@ -9,7 +9,7 @@
 - name: "Unpack NED"
   shell: "sh {{ item.path }}"
   args:
-    chdir: "{{ playbook_dir }}/nso-neds"
+    chdir: "{{ neds_dir }}"
     executable: /bin/bash
   loop:
     "{{ find_result.files }}" 
@@ -31,17 +31,17 @@
 - name: Unpack NED archive (for netsim)
   unarchive:
       src: "{{ item }}"
-      dest: "{{ playbook_dir }}/nso-neds/"
+      dest: "{{ neds_dir }}/"
   loop:
       "{{ ned_archive_list }}"
 
-# do this also for "{{ playbook_dir }}/nso-neds/{{ ned_base_filename }}.tar.gz.signature"
+# do this also for "{{ neds_dir }}/{{ ned_base_filename }}.tar.gz.signature"
 
 - name: "Remove NED common installation files"
   file:
     path: "{{ item }}"
     state: absent
   with_items:
-      - "{{ playbook_dir }}/nso-neds/README.signature"
-      - "{{ playbook_dir }}/nso-neds/cisco_x509_verify_release.py"
-      - "{{ playbook_dir }}/nso-neds/tailf.cer"
+      - "{{ neds_dir }}/README.signature"
+      - "{{ neds_dir }}/cisco_x509_verify_release.py"
+      - "{{ neds_dir }}/tailf.cer"

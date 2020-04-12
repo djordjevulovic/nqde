@@ -1,10 +1,18 @@
+- name: Set nqde_dir variable
+  set_fact:
+       nqde_dir: "{{ playbook_dir }}/../"
+
 - name: Set nso_install_dir variable
   set_fact:
-       nso_install_dir: "{{ playbook_dir }}/nso-bin/nso-{{ nso_version }}"
+       nso_install_dir: "{{ nqde_dir }}/nso-bin/nso-{{ nso_version }}"
+
+- name: Set neds_dir variable
+  set_fact:
+       neds_dir: "{{ nqde_dir }}/nso-neds"
 
 - name: Set project_dir variable
   set_fact:
-       project_dir: "{{ playbook_dir }}/projects/{{ project_name }}"
+       project_dir: "{{ nqde_dir }}/projects/{{ project_name }}"
 
 - name: Set project_run_dir variable
   set_fact:

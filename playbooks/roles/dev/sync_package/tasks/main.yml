@@ -7,7 +7,7 @@
 
 - name: "Sync shared package {{ package_name }}"
   synchronize:
-     src: "{{ playbook_dir }}/shared-packages/{{ package_name }}"
+     src: "{{ nqde_dir }}/shared-packages/{{ package_name }}"
      dest: "{{ project_run_dir }}/packages/"
   when:
      shared == 'true'

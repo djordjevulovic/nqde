@@ -1,6 +1,6 @@
 - name: Find archive files for all NEDs
   find:
-      paths: "{{ playbook_dir }}/nso-neds/"
+      paths: "{{ neds_dir }}/"
       patterns: "ncs*.tar.gz"
   register: find_result
 

@@ -1,7 +1,7 @@
 - name: "Check if python code was changed for {{ package_name }}"
   shell: "diff -r {{ project_dir }}/dev/packages/{{ package_name }}/python {{ project_run_dir }}/packages/{{ package_name }}/python"
   args:
-      chdir: "{{ playbook_dir }}"
+      chdir: "{{ nqde_dir }}"
       executable: /bin/bash
   register:
       diff_python

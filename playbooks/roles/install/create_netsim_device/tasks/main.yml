@@ -1,5 +1,5 @@
 - set_fact:
-    ned_dir: "{{ playbook_dir }}/nso-neds/{{ netsim_device.ned}}"
+    ned_dir: "{{ neds_dir }}/{{ netsim_device.ned}}"
 
 - name: "Check if NED directory {{ ned_dir }} exists"
   stat:

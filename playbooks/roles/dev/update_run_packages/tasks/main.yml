@@ -60,12 +60,4 @@
   when:
       packages is defined
 
-#- name: Sync shared packages
-#  synchronize:
-#     src: "{{ playbook_dir }}/shared-packages/{{ item }}"
-#     dest: "{{ project_run_dir }}/packages/{{ item }}"
-#  loop:
-#      "{{ shared_packages }}"
-#  when:
-#      shared_packages is defined
 
