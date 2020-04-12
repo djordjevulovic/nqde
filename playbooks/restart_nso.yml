@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+
+  roles:
+    - role: common/prepare_environment 
+    - role: nso/stop_nso
+    - role: nso/start_nso
+      vars:
+         ncs_args: "--with-package-reload"
+

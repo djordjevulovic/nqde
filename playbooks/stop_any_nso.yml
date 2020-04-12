@@ -1,0 +1,46 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: "Get all NSO processes"
+    shell: "ps -C ncs.smp -o command"
+    args:
+      executable: /bin/bash
+    register: ps_output
+
+  - debug: var=ps_output
+  
+  - set_fact:
+     ncs_conf: "{{ ps_output.stdout_lines[1].split(' ') | map('regex_search','.*projects.*ncs\\.conf') | select('string') | list | first }}"
+    when: ps_output.stdout_lines | length > 0
+
+  - debug: var=ncs_conf
+
+  - set_fact:
+     project_run_dir: "{{ ncs_conf[:-8] }}"
+    when: ps_output.stdout_lines | length > 0
+
+  - debug: var=project_run_dir
+
+  - set_fact:
+     lib_ncs: "{{ ps_output.stdout_lines[1].split(' ') | map('regex_search','.*lib/ncs$') | select('string') | list | first }}"
+    when: ps_output.stdout_lines | length > 0
+
+  - set_fact:
+      nso_install_dir: "{{ lib_ncs[:-8] }}"
+    when: ps_output.stdout_lines | length > 0
+
+  - debug: var=nso_install_dir
+
+  - include_role:
+      name: run/stop_nso
+#    vars:
+#      netsim_device: "{{ item }}"
+#      netsim_device_action: "add-device"
+ 
+#{{ nso_install_dir }}/ncsrc && ncs --stop"
+#  args:
+#    chdir: "{{ project_run_dir }}"
+

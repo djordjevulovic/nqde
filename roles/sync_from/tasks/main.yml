@@ -1,6 +1,0 @@
-- name: "Sync-from for device {{ device_name }}"
-  include_role:
-     name: call_action
-  vars:
-     action_name: "devices/device={{ device_name }}/sync-from"
-     action_args: ""

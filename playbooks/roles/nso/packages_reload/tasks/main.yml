@@ -1,0 +1,6 @@
+- name: Package reload
+  include_role:
+     name: nso/call_action
+  vars:
+     action_path: "/ncs:packages/reload"
+     action_args: ""

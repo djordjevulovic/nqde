@@ -1,0 +1,10 @@
+- name: Create packages
+  include_role: 
+      name: dev/create_package
+  vars:
+      package_name: "{{ item }}"
+  loop:
+      "{{ packages }}"
+  when:
+      packages is defined
+

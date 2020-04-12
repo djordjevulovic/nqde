@@ -1,0 +1,17 @@
+- name: "Create device {{ create_device_name }} in CDB" 
+  include_role:
+     name: nso/create_cdb_node
+  vars:
+     node_data: 
+       tailf-ncs:devices:
+         device:
+           - name: "{{ create_device_name }}"
+             address: "{{ create_device_address }}"
+             authgroup: "{{ create_device_authgroup }}"
+             device-type:
+               cli:
+                  ned-id: "{{ create_device_ned }}"
+             state:
+               admin-state: unlocked
+
+

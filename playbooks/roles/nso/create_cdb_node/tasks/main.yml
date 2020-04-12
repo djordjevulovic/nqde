@@ -1,0 +1,21 @@
+- name: "Create node"
+  nso_config:
+      url: "http://localhost:{{ api_port }}/jsonrpc"
+      username: admin
+      password: admin
+      data: "{{ node_data }}"
+#  uri:
+#      url:  "http://localhost:{{ api_port }}/restconf/data/{{ node_uri }}"
+#      user: admin
+#      password: admin
+#      method: POST
+#      force_basic_auth: yes
+#      return_content: no
+#      timeout: 30
+#      headers:
+#          Content-Type: "application/yang-data+json"
+#      status_code: 201
+#      body_format: json
+#      body:
+#        "{{ node_args }}"
+  register: node_create_result

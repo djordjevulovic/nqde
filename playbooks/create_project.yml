@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  roles:
+    - role: common/prepare_environment
+    - role: install/create_project_directories
+    - role: install/create_netsim_network
+    - role: install/setup_run_directory
+    - role: install/create_non_netsim_devices
+    - role: dev/create_packages
+    - role: nso/start_netsim
+    - role: nso/start_nso
+    - role: nso/load_native_config

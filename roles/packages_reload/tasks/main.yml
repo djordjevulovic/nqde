@@ -1,6 +1,0 @@
-- name: Package reload
-  include_role:
-     name: call_action
-  vars:
-     action_name: "packages/reload"
-     action_args: ""
