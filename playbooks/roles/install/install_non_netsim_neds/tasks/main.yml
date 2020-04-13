@@ -26,32 +26,3 @@
   loop: 
      "{{ non_netsim_device_list }}" 
 
-- name: "Create authgroup"
-  include_role:
-     name: nso/create_cdb_node
-  vars:
-     node_data:
-       tailf-ncs:devices:
-         authgroups:
-           group:
-            - name: "authgroup-{{ item.name }}"
-              default-map:
-                remote-name: "{{ item.username }}"
-                remote-password: "{{ item.password }}"
-  loop:
-    "{{ non_netsim_device_list }}"
-  when:
-    non_netsim_device_list | length > 0
-
-- name: "Create non_netsim device"
-  include_role:
-    name: nso/create_cdb_device
-  vars:
-    create_device_name: "{{ item.name }}"
-    create_device_address: "{{ item.address }}"
-    create_device_ned: "{{ item.ned }}"
-    create_device_authgroup: "authgroup-{{ item.name }}"
-  loop:
-    "{{ non_netsim_device_list }}"
-  when:
-    non_netsim_device_list | length > 0
