@@ -1,0 +1,13 @@
+- name: Set nqde_dir variable
+  set_fact:
+       nqde_dir: "{{ playbook_dir }}/../"
+
+- name: Set nso_bin_dir variable
+  set_fact:
+       nso_bin_dir: "{{ nqde_dir }}/nso-bin"
+
+- name: Set neds_dir variable
+  set_fact:
+       neds_dir: "{{ nqde_dir }}/nso-neds"
+
+

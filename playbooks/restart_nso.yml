@@ -5,6 +5,7 @@
 
 
   roles:
+    - role: common/prepare_global_environment
     - role: common/prepare_environment 
     - role: nso/stop_nso
     - role: nso/start_nso

@@ -5,6 +5,7 @@
 
 
   roles:
+    - role: common/prepare_global_environment
     - role: install/unpack_ned
 
 

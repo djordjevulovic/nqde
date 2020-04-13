@@ -5,6 +5,7 @@
 
 
   roles:
+    - role: common/prepare_global_environment
     - role: common/prepare_environment 
     - role: "{{ role_name }}"
 
