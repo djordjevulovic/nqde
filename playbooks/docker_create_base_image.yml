@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+
+  tasks:
+  - name: Set nqde_dir variable
+    set_fact:
+       nqde_dir: "{{ playbook_dir }}/../"
+
+  - name: Set docker_build_dir variable
+    set_fact:
+       docker_build_dir: "{{ nqde_dir }}/docker/nqde-base"
+
+  - name: Create build directory
+    file:
+        path: "{{ docker_build_dir }}"
+        state: directory
+
+  - name: Create Dockerfile
+    template:
+        src: "Dockerfile_nqde_base_image.j2"
+        dest: "{{ docker_build_dir }}/Dockerfile"
+
+  - name: Create run-nso.sh
+    template:
+        src: "run-nso.sh.j2"
+        dest: "{{ docker_build_dir }}/run-nso.sh"
+
+  - name: Build nqde-base image
+    docker_image:
+        name: nqde-base
+        source: build
+        build:
+          path: "{{ docker_build_dir }}"
+          dockerfile: "Dockerfile"
+        state: present

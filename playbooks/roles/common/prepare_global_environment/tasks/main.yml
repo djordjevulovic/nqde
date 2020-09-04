@@ -1,13 +1,15 @@
-- name: Set nqde_dir variable
+- name: Set nqde_localhost_dir variable
   set_fact:
-       nqde_dir: "{{ playbook_dir }}/../"
+       nqde_localhost_dir: "{{ playbook_dir }}/../"
 
-- name: Set nso_bin_dir variable
+- name: Set nso_bin_localhost_dir variable
   set_fact:
-       nso_bin_dir: "{{ nqde_dir }}/nso-bin"
+       nso_bin_localhost_dir: "{{ nqde_localhost_dir }}/nso-bin"
 
-- name: Set neds_dir variable
+- name: Set neds_localhost_dir variable
   set_fact:
-       neds_dir: "{{ nqde_dir }}/nso-neds"
+       neds_localhost_dir: "{{ nqde_localhost_dir }}/nso-neds"
 
-
+- name: Set shared_packages_localhost_dir variable
+  set_fact:
+       shared_packages_localhost_dir: "{{ nqde_localhost_dir }}/shared-packages"

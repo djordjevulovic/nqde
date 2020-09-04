@@ -1,3 +1,15 @@
+- name: Set nqde_dir variable (localhost)
+  set_fact:
+       nqde_dir: "{{ nqde_locahost_dir }}"
+  when:
+       deployment == 'localhost'
+
+- name: Set nqde_dir variable (docker)
+  set_fact:
+       nqde_dir: "/nqde"
+  when:
+       deployment == 'docker'
+
 - name: Set nso_install_dir variable
   set_fact:
        nso_install_dir: "{{ nqde_dir }}/nso-bin/nso-{{ nso_version }}"
