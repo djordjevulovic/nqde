@@ -57,7 +57,8 @@
 # creates list of "<name>-<type>-version" strings for all non-netsim NEDs
 - name: Set ned_list_only_other_full_name variable
   vars:
-     full_name: "{{ ned_list | selectattr('name', 'equalto', item.ned) | first | dict2items | map(attribute='value') | join('-') }}"
+    full_name_dir: "{{ ned_list | selectattr('name', 'equalto', item.ned) | first }}"
+    full_name: "{{ '{}-{}-{}'.format(full_name_dir.name, full_name_dir.type, full_name_dir.version) }}"
   set_fact:
      ned_list_only_other_full_name: "{{ ned_list_only_other_full_name }} + [ '{{ full_name }}' ] "
   when:
@@ -65,13 +66,4 @@
   loop:
      "{{ non_netsim_device_list }}"
 
-#- debug: var=ned_list_only_other_full_name
-
-#- name: recompile non-netsim NEDs
-#  debug:
-#    msg:
-#      "{{ ned_list | selectattr('name', 'equalto', item.ned) | first | dict2items | map(attribute='value') | join('-') }}"
-#  when:
-#     ned_list_only_other | select('search',item.ned) | list | length >0
-#  loop:
-#     "{{ non_netsim_device_list }}"
+- debug: var=ned_list_only_other_full_name
