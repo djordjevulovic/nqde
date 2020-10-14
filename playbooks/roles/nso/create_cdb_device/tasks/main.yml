@@ -1,6 +1,6 @@
 - name: Set ned_name_for_device variable
   set_fact:
-     ned_name_for_device: "{{ ned_list_only_other_full_name | map('regex_search','.*%s.*'|format(create_device_ned)) }}"
+     ned_name_for_device: "{{ ned_list_only_other_full_name | map('regex_search','.*%s.*'|format(create_device_ned)) | first }}"
 
 - name: Set ned_type_for_device variable
   set_fact:
