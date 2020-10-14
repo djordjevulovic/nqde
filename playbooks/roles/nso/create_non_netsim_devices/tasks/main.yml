@@ -23,6 +23,7 @@
     create_device_address: "{{ item.address }}"
     create_device_ned: "{{ item.ned }}"
     create_device_authgroup: "authgroup-{{ item.name }}"
+    create_device_ned_settings: "{{ item.ned_settings }}"
   loop:
     "{{ non_netsim_device_list }}"
   when:

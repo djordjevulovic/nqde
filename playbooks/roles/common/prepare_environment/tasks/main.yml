@@ -1,6 +1,6 @@
 - name: Set nqde_dir variable (localhost)
   set_fact:
-       nqde_dir: "{{ nqde_locahost_dir }}"
+       nqde_dir: "{{ nqde_localhost_dir }}"
   when:
        deployment == 'localhost'
 
@@ -50,5 +50,28 @@
   set_fact:
      ned_list_only_other: "{{ ned_list_other | difference(ned_list_netsim) }}"
 
-#- debug: var=ned_list_only_other
+- name: Set empty ned_list_only_other_full_name
+  set_fact:
+     ned_list_only_other_full_name: []
 
+# creates list of "<name>-<type>-version" strings for all non-netsim NEDs
+- name: Set ned_list_only_other_full_name variable
+  vars:
+     full_name: "{{ ned_list | selectattr('name', 'equalto', item.ned) | first | dict2items | map(attribute='value') | join('-') }}"
+  set_fact:
+     ned_list_only_other_full_name: "{{ ned_list_only_other_full_name }} + [ '{{ full_name }}' ] "
+  when:
+     ned_list_only_other | select('search',item.ned) | list | length >0
+  loop:
+     "{{ non_netsim_device_list }}"
+
+#- debug: var=ned_list_only_other_full_name
+
+#- name: recompile non-netsim NEDs
+#  debug:
+#    msg:
+#      "{{ ned_list | selectattr('name', 'equalto', item.ned) | first | dict2items | map(attribute='value') | join('-') }}"
+#  when:
+#     ned_list_only_other | select('search',item.ned) | list | length >0
+#  loop:
+#     "{{ non_netsim_device_list }}"

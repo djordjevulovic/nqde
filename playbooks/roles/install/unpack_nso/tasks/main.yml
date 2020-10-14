@@ -7,10 +7,11 @@
 
 #- debug: var=find_result.files
 
-- set_fact:
+- name: Set fact nso_install_list
+  set_fact:
     nso_install_list: "{{ find_result.files | map(attribute='path') | list | map('regex_replace','.*nso.bin.(.*).linux.x86_64.installer.bin','\\1') | list }}"
 
-- debug: var=nso_install_list
+# - debug: var=nso_install_list
 
 - name: "Unpack NSO installation {{ item }}"
   shell: "sh {{ item }}.linux.x86_64.installer.bin {{ item }} --local-install"

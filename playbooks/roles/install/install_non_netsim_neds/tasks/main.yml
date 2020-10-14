@@ -1,28 +1,33 @@
 - name: Find archive files for all NEDs
   find:
-      paths: "{{ neds_dir }}/"
+      paths: "{{ neds_localhost_dir }}/"
       patterns: "ncs*.tar.gz"
   register: find_result
 
-#- debug: var=find_result.files
-
-- set_fact:
+- name: Set ned_archive_list variable
+  set_fact:
      ned_archive_list: "{{ find_result.files | map(attribute='path') | list }}"
 
-- debug: var=ned_archive_list
+# TODO: check for NED version
+- name: Set ned_format variable
+  set_fact:
+      ned_format: ".*%s.*\\.tar\\.gz"
 
-- set_fact:
-      ned_format: ".*%s\\.tar\\.gz"
-
+# TODO: check for NED version
 - name: install non-netsim NEDs
-#  debug:
-#    msg:
-#      '{{  ned_archive_list | map("regex_search",ned_format|format(item.ned_archive)) | select("string") | list | first }}'
   unarchive:
-     src: '{{  ned_archive_list | map("regex_search",ned_format|format(item.ned_archive)) | select("string") | list | first }}'
+     src: '{{  ned_archive_list | map("regex_search",ned_format|format(item.ned)) | select("string") | list | first }}'
      dest: "{{ project_run_dir }}/packages/"
   when:
      ned_list_only_other | select('search',item.ned) | list | length >0
   loop: 
      "{{ non_netsim_device_list }}" 
 
+# TODO: do recompiling only for NEDs that require it
+- name: recompile non-netsim NEDs
+  shell: "source {{ nso_install_dir }}/ncsrc && make clean && make"
+  args:
+    chdir: "{{ project_run_dir }}/packages/{{ item }}/src"
+    executable: /bin/bash
+  loop:
+     "{{ ned_list_only_other_full_name }}"

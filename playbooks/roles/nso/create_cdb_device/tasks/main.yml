@@ -1,4 +1,28 @@
-- name: "Create device {{ create_device_name }} in CDB" 
+- name: Set ned_name_for_device variable
+  set_fact:
+     ned_name_for_device: "{{ ned_list_only_other_full_name | map('regex_search','.*%s.*'|format(create_device_ned)) }}"
+
+- name: Set ned_type_for_device variable
+  set_fact:
+      ned_type_for_device: "{{ ned_list | selectattr('name', 'equalto', create_device_ned) | first }}"
+
+- name: Set create_device_device_type variable for generic device
+  set_fact:
+      create_device_device_type:
+        generic:
+          ned-id: "{{ ned_name_for_device }}"
+  when:
+    ned_type_for_device.type == 'gen'
+
+- name: Set create_device_device_type variable for CLI device
+  set_fact:
+      create_device_device_type:
+        cli:
+          ned-id: "{{ ned_name_for_device }}"
+  when:
+    ned_type_for_device.type == 'cli'
+
+- name: "Create generic device {{ create_device_name }} in CDB"
   include_role:
      name: nso/create_cdb_node
   vars:
@@ -8,10 +32,7 @@
            - name: "{{ create_device_name }}"
              address: "{{ create_device_address }}"
              authgroup: "{{ create_device_authgroup }}"
-             device-type:
-               cli:
-                  ned-id: "{{ create_device_ned }}"
+             device-type: "{{ create_device_device_type }}"
+             ned-settings: "{{ create_device_ned_settings }}"
              state:
                admin-state: unlocked
-
-
