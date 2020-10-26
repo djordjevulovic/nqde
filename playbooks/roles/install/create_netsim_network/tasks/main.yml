@@ -1,28 +1,35 @@
-- name: "Create device {{ netsim_device_list[0].name }}"
+- name: Create run directory
+  file:
+    path: "{{ project_run_dir }}"
+    state: directory
+  when:
+    netsim_device_list | length > 0
+
+- name: "Create netsim device"
   include_role:
     name: install/create_netsim_device
   vars:
-    netsim_device: "{{ netsim_device_list[0] }}"
+    netsim_device: "{{ netsim_device_list_full_dir[0] }}"
     netsim_device_action: "create-device"
   when:
     netsim_device_list | length > 0
 
-- name: "Add device {{ netsim_device_list[1].name }}"
+- name: "Add netsim device"
   include_role:
     name: install/create_netsim_device
   vars:
-    netsim_device: "{{ netsim_device_list[1] }}"
+    netsim_device: "{{ netsim_device_list_full_dir[1] }}"
     netsim_device_action: "add-device"
   when:
     netsim_device_list | length == 2
 
-- name: "Add other devices"
+- name: "Add netsim devices"
   include_role:
     name: install/create_netsim_device
   vars:
     netsim_device: "{{ item }}"
     netsim_device_action: "add-device"
   loop:
-    "{{ netsim_device_list[1:] | list }}"
+    "{{ netsim_device_list_full_dir[1:] | list }}"
   when:
-    netsim_device_list | length > 2
+    netsim_device_list_full_dir | length > 2

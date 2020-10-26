@@ -1,3 +1,20 @@
+- name: "Check if run directory {{ project_run_dir }} exists"
+  stat:
+      path: "{{ project_run_dir }}"
+  register: project_run_dir_status
+
+- name: Create run directory
+  file:
+    path: "{{ project_run_dir }}"
+    state: directory
+  when:
+    project_run_dir_status.stat.exists == False
+
+- name: Create run Directory
+  file:
+    path: "{{ project_run_dir }}"
+    state: directory
+
 - name: Setup run Directory (wo netsim)
   shell: "source {{ nso_install_dir }}/ncsrc && ncs-setup --dest ."
   args:

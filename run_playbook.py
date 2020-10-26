@@ -103,8 +103,6 @@ class NQDE_Ansible():
                                         start_at_task=None,
                                         verbosity=True,
                                         extra_vars=include_set
-#                                        extra_vars={ '/home/dvulovic/nqde/projects/test.yml' }
-
                                         )
 # ={'dry_run=True', 'service_file={}'.format(service_file)
 
@@ -135,6 +133,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--root', '-r', help="Root NQDE directory", required=False)
 parser.add_argument('--playbook', '-p', help="Playbook name (without .yml)", required=True)
 parser.add_argument('--include', '-i', action='append', help="YAML var file to be included")
+parser.add_argument('--extra_var', '-e', action='append', help="Variable (key=value) to be included")
 parser.add_argument('--verbose', '-v', help="Verbose output", action="store_true")
 
 args = parser.parse_args()
@@ -144,7 +143,6 @@ if args.verbose is True:
 
 
 #print(list)
-
 
 runner = NQDE_Ansible(args.root if args.root else None)
 include_set =  { "@"+file  for file in args.include } if args.include else set()

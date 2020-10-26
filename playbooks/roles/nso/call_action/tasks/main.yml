@@ -4,10 +4,10 @@
       username: admin
       password: admin
       path: "{{ action_path }}"
-      input: { "input": "{{  action_args }}" }     
+      input: "{{ action_args }}"
   register: action_result
   when:
-      action_args != ''
+      action_args is defined
 
 - name: Call action "{{ action_path }} (w/o arguments)"
   nso_action:
@@ -17,4 +17,4 @@
       path: "{{ action_path }}"
   register: action_result
   when:
-      action_args == ''
+      action_args is not defined

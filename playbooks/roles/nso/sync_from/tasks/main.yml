@@ -2,5 +2,5 @@
   include_role:
      name: nso/call_action
   vars:
-     action_path: "/ncs:devices/device={{ device_name }}/sync-from"
-     action_args: ""
+     action_path: "/ncs:devices/device{'{{ device_name }}'}/sync-from"
+

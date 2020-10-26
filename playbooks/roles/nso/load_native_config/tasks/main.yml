@@ -1,9 +1,8 @@
 - name: Sync-from for all configs
   include_role:
-     name: nso/call_action
+     name: nso/sync_from
   vars:
-     action_path: "/ncs:devices/device={{ item.name }}/sync-from"
-     action_args: ""
+     device_name: "{{ item.name }}"
   loop:
     "{{ netsim_device_list }}"
   when:
@@ -13,9 +12,9 @@
   include_role:
      name: nso/call_action
   vars:
-     action_path: "/ncs:devices/device={{ item.name }}/load-native-config"
+     action_path: "/ncs:devices/device{'{{ item.name }}'}/load-native-config"
      action_args: 
-        file: "{{ item.config_file }}"
+        source: "file {{project_dir }}/input/{{ item.config_file }}"
         mode: replace
   loop:
     "{{ netsim_device_list }}"

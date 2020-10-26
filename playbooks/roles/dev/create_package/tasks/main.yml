@@ -1,15 +1,71 @@
-- name: "Check if package {{ package_name }} exists"
-  stat:
-      path: "{{ project_dir }}/dev/packages/{{ package_name }}"
-  register: package_dev_dir_status
+- debug:
+    var: package
 
-- name: Create package
-  shell: "source {{ nso_install_dir }}/ncsrc &&  ncs-make-package  --service-skeleton python-and-template {{ package_name }}"
-  args:
-    chdir: "{{ project_dir }}/dev/packages"
-    executable: /bin/bash
+- set_fact:
+    package_dir: "{{ project_dir }}/packages/dev"
+    package_type: "python-and-template"
   when:
-     package_dev_dir_status.stat.exists == False
+    package.type == 'dev'
+
+- set_fact:
+    package_dir: "{{ project_dir }}/packages/standard"
+    package_type: "template"
+  when:
+    package.type == 'standard'
+
+- name: "Create package {{ package.name }}"
+  shell: "source {{ nso_install_dir }}/ncsrc &&  ncs-make-package  --service-skeleton {{ package_type }} {{ package.name }}"
+  args:
+    chdir: "{{ package_dir }}"
+    executable: /bin/bash
 
 
+- name: "Copy YANG modules for standard package{{ package.name }}"
+  get_url:
+    url: https://raw.githubusercontent.com/YangModels/yang/master/standard/{{ package.org }}/{{ item.branch }}/{{ item.name }}%40{{ item.version }}.yang
+    dest: "{{ package_dir }}/{{ package.name }}/src/yang/{{ item.name }}.yang"
+  loop:
+      "{{ package.yang_modules }}"
+  when:
+    package.type == 'standard'
+
+- name: "Delete default template for standard package {{ package.name }}"
+  file:
+    path: "{{ package_dir }}/{{ package.name }}/templates/{{ package.name }}-template.xml"
+    state: absent
+  when:
+    package.type == 'standard'
+
+- name: "Change makefile for standard package {{ package.name }}"
+  lineinfile:
+    path: "{{ package_dir }}/{{ package.name }}/src/Makefile"
+    insertbefore: '^NCSCPATH.*'
+    line: 'YANGPATH += yang/'
+  when:
+    package.type == 'standard'
+
+- name: "Compile package {{ package.name }}"
+  include_role:
+      name: dev/make_package
+  vars:
+      package_name: "{{ package.name }}"
+      package_parent_dir: "{{ package_dir }}"
+
+- name: "Create symbolic link from run-time directory for package {{ package.name }}"
+  file:
+    src: "{{ package_dir }}/{{ package.name }}"
+    dest: "{{ project_run_dir }}/packages/{{ package.name }}"
+    state: link
+
+#- name: "Check if package {{ package.name }} exists"
+#  stat:
+#      path: "{{ project_dir }}/dev/packages/{{ package.name }}"
+#  register: package_dev_dir_status
+
+#  when:
+#     package_dev_dir_status.stat.exists == False
+
+# https://raw.githubusercontent.com/YangModels/yang/master/standard/ietf/RFC/ietf-network-topology%402018-02-26.yang
+# https://raw.githubusercontent.com/YangModels/yang/master/standard/ietf/RFC/ietf-network%402018-02-26.yang
+-
 

@@ -2,9 +2,11 @@
   include_role: 
       name: dev/create_package
   vars:
-      package_name: "{{ item }}"
+      package: "{{ package_item }}"
   loop:
       "{{ packages }}"
+  loop_control:
+    loop_var: package_item
   when:
       packages is defined
 

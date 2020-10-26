@@ -1,0 +1,36 @@
+- name: Set project_dir variable
+  set_fact:
+       project_dir: "{{ nqde_localhost_dir }}/projects/{{ project_name }}"
+
+- name: "Check if project directory {{ project_dir }} exists"
+  stat:
+      path: "{{ project_dir }}"
+  register: project_dir_status
+
+- name: create project directory
+  file:
+       path: "{{ project_dir }}"
+       state: directory
+  when:
+    project_dir_status.stat.exists == False
+
+- name: create project/dev directory
+  file:
+       path: "{{ project_dir }}/dev"
+       state: directory
+
+- name: create project/dev/packages directory
+  file:
+       path: "{{ project_dir }}/dev/packages"
+       state: directory
+
+- name: create project/input directory
+  file:
+       path: "{{ project_dir }}/input"
+       state: directory
+
+- name: Create skeleton project file
+  template:
+      src: "nqde_project_skeleton.j2"
+      dest: "{{ project_dir }}/{{ project_name }}.yml"
+

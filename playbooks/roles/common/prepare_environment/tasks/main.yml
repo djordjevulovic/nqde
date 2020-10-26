@@ -50,6 +50,22 @@
   set_fact:
      ned_list_only_other: "{{ ned_list_other | difference(ned_list_netsim) }}"
 
+- name: Set empty netsim_device_list_full_dir
+  set_fact:
+     netsim_device_list_full_dir: []
+
+# creates list of "<name>-<type>-version" strings for all netsim NEDs
+- name: Set netsim_device_list_full_dir variable
+  vars:
+    full_name_dir: "{{ ned_list | selectattr('name', 'equalto', item.ned) | first }}"
+    full_name: "{{ '{}-{}-{}'.format(full_name_dir.name, full_name_dir.type, full_name_dir.version) }}"
+  set_fact:
+     netsim_device_list_full_dir: "{{ netsim_device_list_full_dir }} + [ { 'name' : '{{ item.name }}', 'ned' : '{{ full_name }}' } ] "
+  when:
+     ned_list_netsim | select('search',item.ned) | list | length >0
+  loop:
+     "{{ netsim_device_list }}"
+
 - name: Set empty ned_list_only_other_full_name
   set_fact:
      ned_list_only_other_full_name: []
