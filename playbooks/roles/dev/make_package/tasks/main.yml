@@ -1,6 +1,3 @@
-- debug:
-    msg: "{{ package_parent_dir }}/{{ package_name }}/src"
-
 - name: "Compile package {{ package_name }}"
   shell: "source {{ nso_install_dir }}/ncsrc && make"
   args:

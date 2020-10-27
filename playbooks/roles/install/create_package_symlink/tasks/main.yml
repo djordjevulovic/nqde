@@ -1,0 +1,15 @@
+- set_fact:
+    package_dir: "{{ project_dir }}/packages/dev"
+  when:
+    package.type == 'dev'
+
+- set_fact:
+    package_dir: "{{ project_dir }}/packages/standard"
+  when:
+    package.type == 'standard'
+
+- name: "Create symbolic link from run-time directory for package {{ package.name }}"
+  file:
+    src: "{{ package_dir }}/{{ package.name }}"
+    dest: "{{ project_run_dir }}/packages/{{ package.name }}"
+    state: link

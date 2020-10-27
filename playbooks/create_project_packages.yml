@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+
+  roles:
+    - role: common/prepare_global_environment
+    - role: common/prepare_environment
+    - role: dev/create_packages
+

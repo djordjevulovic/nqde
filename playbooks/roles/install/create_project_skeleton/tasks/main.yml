@@ -34,3 +34,34 @@
       src: "nqde_project_skeleton.j2"
       dest: "{{ project_dir }}/{{ project_name }}.yml"
 
+- set_fact:
+    role_short_name: "start_nso"
+
+- set_fact:
+    role_full_name: "nso/{{ role_short_name }}"
+
+- name: Create start_nso script file
+  template:
+      src: "run_role.j2"
+      dest: "{{ project_dir }}/{{ role_short_name }}.sh"
+
+- name: Chmod start_nso script file
+  file:
+    path: "{{ project_dir }}/{{ role_short_name }}.sh"
+    mode: '0777'
+
+- set_fact:
+    role_short_name: "stop_nso"
+
+- set_fact:
+    role_full_name: "nso/{{ role_short_name }}"
+
+- name: Create stop_nso script file
+  template:
+      src: "run_role.j2"
+      dest: "{{ project_dir }}/{{ role_short_name }}.sh"
+
+- name: Chmod stop_nso script file
+  file:
+    path: "{{ project_dir }}/{{ role_short_name }}.sh"
+    mode: '0777'

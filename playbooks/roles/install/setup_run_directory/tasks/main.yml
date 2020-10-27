@@ -30,3 +30,15 @@
     executable: /bin/bash
   when:
     netsim_device_list | length > 0
+
+- name: Create symbolic links to packages
+  include_role:
+      name: install/create_package_symlink
+  vars:
+      package: "{{ package_item }}"
+  loop:
+      "{{ packages }}"
+  loop_control:
+    loop_var: package_item
+  when:
+      packages is defined

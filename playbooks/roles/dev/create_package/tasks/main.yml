@@ -1,6 +1,3 @@
-- debug:
-    var: package
-
 - set_fact:
     package_dir: "{{ project_dir }}/packages/dev"
     package_type: "python-and-template"
@@ -13,12 +10,18 @@
   when:
     package.type == 'standard'
 
+- name: "Check if directory for package {{ package.name }} exists"
+  stat:
+      path: "{{ package_dir }}{{ package.name }}"
+  register: package_dir_status
+
 - name: "Create package {{ package.name }}"
   shell: "source {{ nso_install_dir }}/ncsrc &&  ncs-make-package  --service-skeleton {{ package_type }} {{ package.name }}"
   args:
     chdir: "{{ package_dir }}"
     executable: /bin/bash
-
+  when:
+    package_dir_status.stat.exists == False
 
 - name: "Copy YANG modules for standard package{{ package.name }}"
   get_url:
@@ -44,18 +47,18 @@
   when:
     package.type == 'standard'
 
-- name: "Compile package {{ package.name }}"
+- name: "Compile package"
   include_role:
       name: dev/make_package
   vars:
       package_name: "{{ package.name }}"
       package_parent_dir: "{{ package_dir }}"
 
-- name: "Create symbolic link from run-time directory for package {{ package.name }}"
-  file:
-    src: "{{ package_dir }}/{{ package.name }}"
-    dest: "{{ project_run_dir }}/packages/{{ package.name }}"
-    state: link
+#- name: "Create symbolic link from run-time directory for package {{ package.name }}"
+#  file:
+#    src: "{{ package_dir }}/{{ package.name }}"
+#    dest: "{{ project_run_dir }}/packages/{{ package.name }}"
+#    state: link
 
 #- name: "Check if package {{ package.name }} exists"
 #  stat:
