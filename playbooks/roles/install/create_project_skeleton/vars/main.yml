@@ -1,0 +1,7 @@
+scripts:
+  - role_name: "start_nso"
+    role_dir: "run"
+  - role_name: "stop_nso"
+    role_dir: "run"
+  - role_name: "make_all_packages"
+    role_dir: "dev"

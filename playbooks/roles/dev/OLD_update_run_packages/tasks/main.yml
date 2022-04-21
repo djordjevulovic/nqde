@@ -1,6 +1,6 @@
 - name: Sync shared packages
   include_role:
-      name: dev/sync_package
+      name: dev/OLD_sync_package
   vars:
       package_name: "{{ item }}"
       shared: "true"
@@ -31,7 +31,7 @@
 
 - name: Sync local packages
   include_role:
-      name: dev/sync_package
+      name: dev/OLD_sync_package
   vars:
       package_name: "{{ item }}"
       shared: "false"

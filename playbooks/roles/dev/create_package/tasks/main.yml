@@ -1,27 +1,24 @@
 - set_fact:
-    package_dir: "{{ project_dir }}/packages/dev"
+    package_dir: "{{ project_dir }}/packages/{{ package.type }}"
     package_type: "python-and-template"
-  when:
-    package.type == 'dev'
-
-- set_fact:
-    package_dir: "{{ project_dir }}/packages/standard"
-    package_type: "template"
-  when:
-    package.type == 'standard'
 
 - name: "Check if directory for package {{ package.name }} exists"
   stat:
       path: "{{ package_dir }}{{ package.name }}"
   register: package_dir_status
 
-- name: "Create package {{ package.name }}"
+- name: "Create {{ package_dir }} directory"
+  file:
+       path: "{{ package_dir }}"
+       state: directory
+
+- name: "Create skeleton for package {{ package.name }}"
   shell: "source {{ nso_install_dir }}/ncsrc &&  ncs-make-package  --service-skeleton {{ package_type }} {{ package.name }}"
   args:
     chdir: "{{ package_dir }}"
     executable: /bin/bash
   when:
-    package_dir_status.stat.exists == False
+    package_dir_status.stat.exists == False and (package.type == 'dev' or package.type =='standard')
 
 - name: "Copy YANG modules for standard package{{ package.name }}"
   get_url:
@@ -46,6 +43,21 @@
     line: 'YANGPATH += yang/'
   when:
     package.type == 'standard'
+
+- name: "Clone package {{ package.name }} from git"
+  git:
+    repo: "{{ package.git_clone.url }}"
+    dest: "{{ package_dir }}/{{ package.name }}"
+  when:
+    package.type == 'git_clone'
+
+- name: "Create symbolic link from run-time directory for package {{ package.name }}"
+  file:
+    src: "{{ shared_packages_localhost_dir }}/{{ package.name }}"
+    dest: "{{ package_dir }}/{{ package.name }}"
+    state: link
+  when:
+    package.type == 'shared'
 
 - name: "Compile package"
   include_role:

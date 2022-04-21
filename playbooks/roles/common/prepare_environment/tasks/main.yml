@@ -1,3 +1,11 @@
+- block:
+  - name: "Deployment not specified - abort playbook"
+    debug:
+      msg: "Deployment not specified, aborting playbook"
+  - meta: end_play
+  when:
+    deployment is not defined
+
 - name: Set nqde_dir variable (localhost)
   set_fact:
        nqde_dir: "{{ nqde_localhost_dir }}"
@@ -29,7 +37,7 @@
 - name: Set non_netsim_device_list variable
   set_fact:
     non_netsim_device_list: "{{ ( devices | selectattr('type', 'ne', 'netsim') | list) }}"
- 
+
 - name: Set ned_list_all variable
   set_fact:
      ned_list_all: "{{ devices | map(attribute='ned') | list | unique }}"
@@ -66,11 +74,12 @@
   loop:
      "{{ netsim_device_list }}"
 
-- name: Set empty ned_list_only_other_full_name
+# creates list of "<name>-<type>-version" strings for all non-netsim NEDs
+
+- name: Init ned_list_only_other_full_name
   set_fact:
      ned_list_only_other_full_name: []
 
-# creates list of "<name>-<type>-version" strings for all non-netsim NEDs
 - name: Set ned_list_only_other_full_name variable
   vars:
     full_name_dir: "{{ ned_list | selectattr('name', 'equalto', item.ned) | first }}"
@@ -78,8 +87,59 @@
   set_fact:
      ned_list_only_other_full_name: "{{ ned_list_only_other_full_name }} + [ '{{ full_name }}' ] "
   when:
-     ned_list_only_other | select('search',item.ned) | list | length >0
+     ned_list_only_other | select('search') | list | length >0
   loop:
      "{{ non_netsim_device_list }}"
 
-- debug: var=ned_list_only_other_full_name
+- name: Set ned_list_only_other_full_name_unique variable
+  set_fact:
+    ned_list_only_other_full_name_unique: "{{ ned_list_only_other_full_name | unique }}"
+
+- name: Init ned_list_only_other_full
+  set_fact:
+     ned_list_only_other_full: []
+
+- name: Set ned_list_only_other_full variable
+  vars:
+    ned_dict: "{{ ned_list | selectattr('name', 'equalto', item.ned) | first }}"
+  set_fact:
+     ned_list_only_other_full: "{{ ned_list_only_other_full + [{'name': ned_dict.name, 'type': ned_dict.type, 'version': ned_dict.version }] }}"
+  when:
+     ned_list_only_other | select('search') | list | length >0
+  loop:
+     "{{ non_netsim_device_list }}"
+
+- debug:
+    var: ned_list_only_other_full
+
+- name: Set ned_list_only_other_full_unique variable
+  set_fact:
+    ned_list_only_other_full_unique: "{{ ned_list_only_other_full | unique }}"
+
+- debug:
+    var: ned_list_only_other_full_unique
+
+# creates list of "<name>-<version>" strings for all non-netsim NEDs
+
+- name: Set empty ned_list_only_other_full_name_notype
+  set_fact:
+     ned_list_only_other_full_name_notype: []
+
+- name: Set ned_list_only_other_full_name_notype variable
+  vars:
+    full_name_dir: "{{ ned_list | selectattr('name', 'equalto', item.ned) | first }}"
+    full_name: "{{ '{}-{}'.format(full_name_dir.name, full_name_dir.version) }}"
+  set_fact:
+     ned_list_only_other_full_name_notype: "{{ ned_list_only_other_full_name_notype }} + [ '{{ full_name }}' ] "
+  when:
+     ned_list_only_other | select('search') | list | length >0
+  loop:
+     "{{ non_netsim_device_list }}"
+
+- name: Set ned_list_only_other_full_name_notype_unique variable
+  set_fact:
+    ned_list_only_other_full_name_notype_unique: "{{ ned_list_only_other_full_name_notype | unique }}"
+
+- debug: var=ned_list_only_other_full_name_notype
+
+- debug: var=ned_list_only_other_full_name_notype_unique

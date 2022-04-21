@@ -6,13 +6,14 @@
   roles:
     - role: common/prepare_global_environment
     - role: common/prepare_environment
-    - role: install/create_netsim_network
-    - role: install/setup_run_directory
-    - role: install/install_non_netsim_neds
-    - role: run/start_netsim
-    - role: run/start_nso
-      vars:
-         ncs_args: "--with-package-reload"
+#    - role: install/create_netsim_network
+#    - role: install/setup_run_directory
+#    - role: install/install_non_netsim_neds
+#    - role: dev/recompile_all_packages
+#    - role: run/start_netsim
+#    - role: run/start_nso
+#      vars:
+#         ncs_args: "--with-package-reload"
     - role: nso/create_non_netsim_devices
 
 #    until nso_action module get resolved

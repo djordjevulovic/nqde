@@ -1,1 +1,1 @@
-ansible-playbook ../../playbooks/run_role.yml -e "role_name={{ role_full_name }}" -e "@{{ project_name  }}.yml"
+ansible-playbook ../../playbooks/run_role.yml -e "role_name={{ script.role_dir }}/{{ script.role_name }}" -e "@{{ project_name  }}.yml"

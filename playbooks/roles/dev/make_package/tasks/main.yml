@@ -1,6 +1,6 @@
-- name: "Compile package {{ package_name }}"
-  shell: "source {{ nso_install_dir }}/ncsrc && make"
+- name: "Compile package {{ package.name }}"
+  shell: "source {{ nso_install_dir }}/ncsrc && make clean && make"
   args:
-    chdir: "{{ package_parent_dir }}/{{ package_name }}/src"
+    chdir: "{{ project_dir }}/packages/{{ package.type }}/{{ package.name }}/src"
     executable: /bin/bash
 

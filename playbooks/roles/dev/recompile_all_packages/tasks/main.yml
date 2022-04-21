@@ -1,0 +1,12 @@
+- name: Compile packages
+  include_role:
+      name: dev/make_package
+  vars:
+      package: "{{ package_item }}"
+  loop:
+      "{{ packages }}"
+  loop_control:
+    loop_var: package_item
+  when:
+      packages is defined
+
