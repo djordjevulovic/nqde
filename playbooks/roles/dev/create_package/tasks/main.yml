@@ -1,21 +1,57 @@
 - set_fact:
-    package_dir: "{{ project_dir }}/packages/{{ package.type }}"
-    package_type: "python-and-template"
+    packages_type_dir: "{{ project_dir }}/packages/{{ package.type }}"
+
+- set_fact:
+    packages_type_group_dir: "{{ packages_type_dir }}/{{ package.dir }}"
+    package_parent_dir: "{{ packages_type_dir }}/{{ package.dir }}"
+    package_dir: "{{ packages_type_dir }}/{{ package.dir }}/{{ package.name }}"
+    package_dir_name: "{{ package.dir }}/{{ package.name }}"
+  when:
+    package.dir is defined
+
+- set_fact:
+    package_dir: "{{ packages_type_dir }}/{{ package.name }}"
+    package_parent_dir: "{{ packages_type_dir }}"
+    package_dir_name: "{{ package.name }}"
+  when:
+    package.dir is undefined
+
+- name: "Check if type directory for package {{ package.name }} exists"
+  stat:
+      path: "{{ packages_type_dir }}"
+  register: packages_type_dir_status
+
+- name: "Create {{ packages_type_dir }} directory"
+  file:
+       path: "{{ packages_type_dir }}"
+       state: directory
+  when:
+    packages_type_dir_status.stat.exists == False
+
+- name: "Check if group directory for package {{ package.name }} exists"
+  stat:
+      path: "{{ packages_type_group_dir }}"
+  register: packages_type_group_dir_status
+
+- name: "Create group directory for {{ package.name }}"
+  file:
+       path: "{{ packages_type_group_dir }}"
+       state: directory
+  when:
+    packages_type_group_dir_status.stat.exists == False
 
 - name: "Check if directory for package {{ package.name }} exists"
   stat:
-      path: "{{ package_dir }}{{ package.name }}"
+      path: "{{ package_dir }}"
   register: package_dir_status
 
-- name: "Create {{ package_dir }} directory"
-  file:
-       path: "{{ package_dir }}"
-       state: directory
-
 - name: "Create skeleton for package {{ package.name }}"
+  vars:
+    package_type: "python-and-template"
+    nso_install_dir: "{{ nqde_dir }}/nso-bin/nso-{{ package.nso_version }}"
   shell: "source {{ nso_install_dir }}/ncsrc &&  ncs-make-package  --service-skeleton {{ package_type }} {{ package.name }}"
   args:
-    chdir: "{{ package_dir }}"
+    chdir: "{{ package_parent_dir }}"
     executable: /bin/bash
   when:
     package_dir_status.stat.exists == False and (package.type == 'dev' or package.type =='standard')
@@ -51,20 +87,23 @@
   when:
     package.type == 'git_clone'
 
-- name: "Create symbolic link from run-time directory for package {{ package.name }}"
+- name: "Create symbolic link for shared package {{ package.name }}"
   file:
-    src: "{{ shared_packages_localhost_dir }}/{{ package.name }}"
-    dest: "{{ package_dir }}/{{ package.name }}"
+    src: "{{ shared_packages_localhost_dir }}/{{ package_dir_name }}"
+    dest: "{{ package_dir }}"
     state: link
   when:
     package.type == 'shared'
 
-- name: "Compile package"
-  include_role:
-      name: dev/make_package
-  vars:
-      package_name: "{{ package.name }}"
-      package_parent_dir: "{{ package_dir }}"
+  # TODO: compile must be done at runtime creation
+#- name: "Compile package"
+#  include_role:
+#      name: dev/make_package
+#  vars:
+#      package_name: "{{ package.name }}"
+#      package_parent_dir: "{{ package_parent_dir }}"
+
+  # TODO: old remove
 
 #- name: "Create symbolic link from run-time directory for package {{ package.name }}"
 #  file:

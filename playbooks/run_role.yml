@@ -6,7 +6,8 @@
 
   roles:
     - role: common/prepare_global_environment
-    - role: common/prepare_environment 
+    - role: common/prepare_project_common_environment
+    - role: common/prepare_project_runtime_environment
     - role: "{{ role_name }}"
 
 

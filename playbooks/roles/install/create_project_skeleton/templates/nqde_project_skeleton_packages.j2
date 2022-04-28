@@ -1,0 +1,33 @@
+---
+packages:
+  - name: new_package_for_development
+    type: dev
+# NSO version from which "ncs-make-package" will be run
+    nso_version: 5.7.3
+# Optional directory that will group some packages
+    dir: package_group_dir
+  - name: package_downloaded_from_git_repo
+    type: git_clone
+    git_clone:
+       url: "https://github.com/someuser/someproject.git"
+  - name: shared_package_between projects
+    type: shared
+# Optional directory that will group some packages
+    dir: package_group_dir
+# Example of package created from standard (e.g. IETF) Yang models
+  - name: ietf-network
+    type: standard
+    org: ietf
+    yang_modules:
+       - name: ietf-network
+         branch: RFC
+         version: "2018-02-26"
+       - name: ietf-network-topology
+         branch: RFC
+         version: "2018-02-26"
+       - name: ietf-l3-unicast-topology
+         branch: RFC
+         version: "2018-02-26"
+       - name: ietf-routing-types
+         branch: RFC
+         version: "2017-12-04"

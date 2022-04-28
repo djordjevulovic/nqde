@@ -5,7 +5,7 @@
 
   roles:
     - role: common/prepare_global_environment
-    - role: common/prepare_environment 
+    - role: common/prepare_project_common_environment
     - role: run/stop_nso
     - role: run/start_nso
       vars:

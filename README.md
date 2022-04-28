@@ -32,21 +32,24 @@ optional arguments:
 ### Installing NEDs
 
 1. Copy NED binary file (ending with *.bin) into "nso-neds" directory
-2. From the NQDE top level directory run command "ansible-playbook playbooks/unpack_ned.yml"
+2. From the NQDE top level directory run command "./unpack_all.sh"
  
 ## Create New NQDE Project
 
 ### Create Project Skeleton
 
-1. From the NQDE top level directory run command "ansible-playbook playbooks/create_project_skeleton.yml -e "project_name=\<project name\>"
+1. From the NQDE projects directory run command "./create_project_skeleton.sh \<project name\>"
 
 ### Customize Project Skeleton
 
-1. Edit default project file project/\<project name\>/\<project name\>.yml
+1. Edit default project config files:
+ - project/\<project name\>/\<project name\>_runtime.yml
+ - project/\<project name\>/\<project name\>_packages.yml
+ - project/\<project name\>/\<project name\>_devices.yml
 
 ### Create Project Packages
 
-1. From the NQDE top level directory run command "ansible-playbook playbooks/create_project_packages.yml -e "@projects/\<project name\>/\<projectname\>.yml"
+1. From the project directory run command "./create_project_packages.sh"
 
 ### Create Project Run-time Environment
 

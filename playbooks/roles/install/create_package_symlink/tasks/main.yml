@@ -1,8 +1,18 @@
 - set_fact:
-    package_dir: "{{ project_dir }}/packages/{{ package.type }}"
+    packages_type_dir: "{{ project_dir }}/packages/{{ package.type }}"
+
+- set_fact:
+    package_dir: "{{ packages_type_dir }}/{{ package.dir }}/{{ package.name }}"
+  when:
+    package.dir is defined
+
+- set_fact:
+    package_dir: "{{ packages_type_dir }}/{{ package.name }}"
+  when:
+    package.dir is undefined
 
 - name: "Create symbolic link from run-time directory for package {{ package.name }}"
   file:
-    src: "{{ package_dir }}/{{ package.name }}"
+    src: "{{ package_dir }}"
     dest: "{{ project_run_dir }}/packages/{{ package.name }}"
     state: link

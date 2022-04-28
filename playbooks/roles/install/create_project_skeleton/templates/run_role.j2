@@ -1,1 +1,1 @@
-ansible-playbook ../../playbooks/run_role.yml -e "role_name={{ script.role_dir }}/{{ script.role_name }}" -e "@{{ project_name  }}.yml"
+ansible-playbook ../../playbooks/run_role.yml -e "role_name={{ script.role_dir }}/{{ script.role_name }}" -e "@ncrf_config_common.yml"{%- for cfg in script.config_files %} -e "@ncrf_config_{{ cfg }}.yml"{% endfor %}

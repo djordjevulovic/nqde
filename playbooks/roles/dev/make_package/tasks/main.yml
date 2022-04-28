@@ -1,6 +1,19 @@
+- set_fact:
+    packages_type_dir: "{{ project_dir }}/packages/{{ package.type }}"
+
+- set_fact:
+    package_dir: "{{ packages_type_dir }}/{{ package.dir }}/{{ package.name }}"
+  when:
+    package.dir is defined
+
+- set_fact:
+    package_dir: "{{ packages_type_dir }}/{{ package.name }}"
+  when:
+    package.dir is undefined
+
 - name: "Compile package {{ package.name }}"
   shell: "source {{ nso_install_dir }}/ncsrc && make clean && make"
   args:
-    chdir: "{{ project_dir }}/packages/{{ package.type }}/{{ package.name }}/src"
+    chdir: "{{ package_dir }}/src"
     executable: /bin/bash
 

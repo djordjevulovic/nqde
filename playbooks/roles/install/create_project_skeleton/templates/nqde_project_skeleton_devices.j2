@@ -1,0 +1,34 @@
+---
+devices:
+  - name: device1
+    ned: cisco-ios
+    type: netsim
+# optional initial config file (must be in the "input" directory)
+    config_file: device1_initial_config.cfg
+  - name: device2
+    ned: cisco-iosxr
+    type: real
+# device IP address
+    address: 1.1.1.1
+# device credentials (NSO authgroup)
+    username: admin
+    password: somepassword
+  - name: apic
+    ned: cisco-apicdc
+    type: lab
+# APIC IP address
+    address: 1.1.1.1
+# APIC credentials
+    username: admin
+    password: somepassword
+    ned_settings:
+      cisco-apicdc:
+# file for config storage
+        config-path: "/tmp"
+        local-host: true
+        protocol: scp
+# IP address of the localhost
+        host: 2.2.2.2
+# credentials of the localhost
+        user-name: user01
+        user-password: user01

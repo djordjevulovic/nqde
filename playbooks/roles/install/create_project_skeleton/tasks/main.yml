@@ -24,26 +24,54 @@
        path: "{{ project_dir }}/input"
        state: directory
 
-- name: Create skeleton project file
+- name: Create skeleton project config files
   template:
-      src: "nqde_project_skeleton.j2"
-      dest: "{{ project_dir }}/{{ project_name }}.yml"
+      src: "nqde_project_skeleton_{{ item }}.j2"
+      dest: "{{ project_dir }}/ncrf_config_{{ item }}.yml"
+  loop:
+    - "common"
+    - "runtime"
+    - "devices"
+    - "packages"
 
-- name: Create script files
+- name: "Create symbolic link for active_runtime config"
+  file:
+    src: "{{ project_dir }}/ncrf_config_runtime.yml"
+    dest: "{{ project_dir }}/ncrf_config_active_runtime.yml"
+    state: link
+
+- name: Create script files for roles
   template:
       src: "run_role.j2"
       dest: "{{ project_dir }}/{{ script.role_name }}.sh"
   loop:
-      "{{ scripts }}"
+      "{{ scripts.roles }}"
   loop_control:
     loop_var: script
 
-- name: Chmod script files
+- name: Chmod script files for roles
   file:
     path: "{{ project_dir }}/{{ script.role_name }}.sh"
     mode: '0777'
   loop:
-      "{{ scripts }}"
+      "{{ scripts.roles }}"
   loop_control:
     loop_var: script
 
+- name: Create script files for playbooks
+  template:
+      src: "run_playbook.j2"
+      dest: "{{ project_dir }}/{{ script.playbook_name }}.sh"
+  loop:
+      "{{ scripts.playbooks }}"
+  loop_control:
+    loop_var: script
+
+- name: Chmod script files for playbooks
+  file:
+    path: "{{ project_dir }}/{{ script.playbook_name }}.sh"
+    mode: '0777'
+  loop:
+      "{{ scripts.playbooks }}"
+  loop_control:
+    loop_var: script

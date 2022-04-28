@@ -1,0 +1,2 @@
+ansible-playbook ../../playbooks/{{ script.playbook_name }}.yml -e "@ncrf_config_common.yml"{%- for cfg in script.config_files %} -e "@ncrf_config_{{ cfg }}.yml"{% endfor %}
+

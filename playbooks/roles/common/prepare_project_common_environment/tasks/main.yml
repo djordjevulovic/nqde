@@ -1,0 +1,15 @@
+- name: Set nqde_dir variable (localhost)
+  set_fact:
+       nqde_dir: "{{ nqde_localhost_dir }}"
+  when:
+       deployment == 'localhost'
+
+- name: Set nqde_dir variable (docker)
+  set_fact:
+       nqde_dir: "/nqde"
+  when:
+       deployment == 'docker'
+
+- name: Set project_dir variable
+  set_fact:
+       project_dir: "{{ nqde_dir }}/projects/{{ project_name }}"

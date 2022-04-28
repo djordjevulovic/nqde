@@ -1,7 +1,41 @@
 scripts:
-  - role_name: "start_nso"
-    role_dir: "run"
-  - role_name: "stop_nso"
-    role_dir: "run"
-  - role_name: "make_all_packages"
-    role_dir: "dev"
+  playbooks:
+    - playbook_name: "create_project_runtime"
+      config_files:
+        - "packages"
+        - "devices"
+        - "active_runtime"
+    - playbook_name: "activate_project_runtime"
+      config_files:
+        - "packages"
+        - "devices"
+        - "active_runtime"
+    - playbook_name: "create_project_packages"
+      config_files:
+        - "packages"
+  roles:
+    - role_name: "start_nso"
+      role_dir: "run"
+      config_files:
+        - "active_runtime"
+    - role_name: "stop_nso"
+      role_dir: "run"
+      config_files:
+        - "active_runtime"
+    - role_name: "make_all_packages"
+      role_dir: "dev"
+      config_files:
+        - "active_runtime"
+        - "devices"
+        - "packages"
+    - role_name: "recompile_all_packages"
+      role_dir: "dev"
+      config_files:
+        - "active_runtime"
+        - "devices"
+        - "packages"
+    - role_name: "create_non_netsim_devices"
+      role_dir: "nso"
+      config_files:
+        - "active_runtime"
+        - "devices"
